@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Bot - Bots.gg</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black min-h-screen text-gray-100 antialiased">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                    Bots.gg
+                </a>
+                <div class="hidden md:flex items-center space-x-4">
+                    <% if (user) { %>
+                        <span class="text-gray-400">Welcome, <span class="text-blue-400"><%= user.username %></span></span>
+                        <a href="/submit" class="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                            Add Bot
+                        </a>
+                        <a href="/logout" class="text-gray-300 hover:text-white transition-colors">Logout</a>
+                    <% } else { %>
+                        <a href="/auth/discord" class="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+                            Login with Discord
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="relative pt-32 pb-20 px-4">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-purple-600/10"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(51,65,85,0.1)_0,rgba(0,0,0,0)_100%)]"></div>
+        
+        <div class="max-w-3xl mx-auto relative">
+            <h1 class="text-4xl sm:text-5xl font-bold mb-8 text-center">
+                Submit Your <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">Bot</span>
+            </h1>
+
+            <form id="botForm" class="space-y-6">
+                <div class="space-y-4">
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="botID" class="block text-sm font-medium text-gray-300 mb-1">Client ID</label>
+                                <input type="text" id="botID" name="botID" required
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label for="prefix" class="block text-sm font-medium text-gray-300 mb-1">Prefix</label>
+                                <input type="text" id="prefix" name="prefix" required
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label for="backURL" class="block text-sm font-medium text-gray-300 mb-1">Invite URL</label>
+                                <input type="text" id="backURL" name="backURL" required
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label for="supportURL" class="block text-sm font-medium text-gray-300 mb-1">Support URL</label>
+                                <input type="text" id="supportURL" name="supportURL"
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label for="websiteURL" class="block text-sm font-medium text-gray-300 mb-1">Website URL</label>
+                                <input type="text" id="websiteURL" name="websiteURL"
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label for="githubURL" class="block text-sm font-medium text-gray-300 mb-1">GitHub URL</label>
+                                <input type="text" id="githubURL" name="githubURL"
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <div>
+                                <label for="webhookURL" class="block text-sm font-medium text-gray-300 mb-1">Webhook URL</label>
+                                <input type="text" id="webhookURL" name="webhookURL"
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-3">Tags</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" class="w-4 h-4 rounded border-gray-700 text-blue-600 focus:ring-blue-500" id="moderation" value="moderation">
+                                <span class="text-sm text-gray-300">Moderation</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" class="w-4 h-4 rounded border-gray-700 text-blue-600 focus:ring-blue-500" id="fun" value="fun">
+                                <span class="text-sm text-gray-300">Fun</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" class="w-4 h-4 rounded border-gray-700 text-blue-600 focus:ring-blue-500" id="minecraft" value="minecraft">
+                                <span class="text-sm text-gray-300">Minecraft</span>
+                            </label>
+                            <!-- Add all other checkboxes following the same pattern -->
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="shortDesc" class="block text-sm font-medium text-gray-300 mb-1">Short Description</label>
+                                <textarea id="shortDesc" name="shortDesc" required rows="3"
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label for="longDesc" class="block text-sm font-medium text-gray-300 mb-1">Long Description</label>
+                                <textarea id="longDesc" name="longDesc" required rows="6"
+                                    class="w-full px-4 py-2 bg-gray-900/50 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <button id="submit" type="submit"
+                        class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors">
+                        Submit Bot
+                    </button>
+                </div>
+            </form>
+
+            <div id="popupMessage" class="hidden fixed top-4 right-4 p-4 bg-green-500 text-white rounded-lg shadow-lg"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-400">&copy; 2024 Bots.gg. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'submit') {
+                e.preventDefault();
+                document.getElementById('submit').disabled = true;
+                
+                setTimeout(() => {
+                    document.getElementById('submit').disabled = false;
+                }, 2000);
+                
+                let tags = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(element => {
+                    tags.push(element.value);
+                });
+                
+                tags = [...new Set(tags)];
+                
+                let data = {
+                    botID: document.getElementById('botID').value,
+                    prefix: document.getElementById('prefix').value,
+                    backURL: document.getElementById('backURL').value,
+                    supportURL: document.getElementById('supportURL').value,
+                    websiteURL: document.getElementById('websiteURL').value,
+                    githubURL: document.getElementById('githubURL').value,
+                    webhookURL: document.getElementById('webhookURL').value,
+                    shortDesc: document.getElementById('shortDesc').value,
+                    longDesc: document.getElementById('longDesc').value,
+                    tags: tags
+                };
+                
+                fetch('/bot/new', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const popup = document.getElementById('popupMessage');
+                    popup.textContent = `You successfully added your bot! An admin will now review it.`;
+                    popup.classList.remove('hidden');
+                    
+                    const botID = data.botID;
+                    const redirectUrl = `/bots/${botID}`;
+                    
+                    setTimeout(() => {
+                        popup.classList.add('hidden');
+                        window.location.href = redirectUrl;
+                    }, 10000);
+                })
+                .catch(error => {
+                    console.error('Error submitting bot:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

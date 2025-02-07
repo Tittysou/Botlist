@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Bots | Bots.gg</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black min-h-screen text-gray-100 antialiased">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                    Bots.gg
+                </a>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/" class="text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="/about" class="text-gray-300 hover:text-white transition-colors">About</a>
+                    <% if (user) { %>
+                        <a href="/logout" class="text-gray-300 hover:text-white transition-colors">Logout</a>
+                    <% } else { %>
+                        <a href="/auth/discord" class="inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
+                            Login with Discord
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative pt-32 pb-20 px-4">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-purple-600/10"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(51,65,85,0.1)_0,rgba(0,0,0,0)_100%)]"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+                Discover Amazing <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">Discord Bots</span>
+            </h1>
+            <p class="text-xl text-gray-400">
+                Browse through our collection of powerful and innovative Discord bots
+            </p>
+        </div>
+    </header>
+
+    <!-- Bot Grid -->
+    <main class="max-w-7xl mx-auto px-4 pb-20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <% bots.forEach(bot => { %>
+                <div class="group p-6 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+                    <a href="/bots/<%= bot.botID %>" class="block space-y-4">
+                        <img src="<%= bot.avatarURL || 'https://cdn.discordapp.com/embed/avatars/0.png' %>" 
+                             alt="<%= bot.username %> Avatar"
+                             class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-gray-700/50 group-hover:border-blue-500/50 transition-colors">
+                        
+                        <h3 class="text-xl font-semibold text-center"><%= bot.username %></h3>
+                        
+                        <p class="text-gray-400 text-center text-sm line-clamp-2"><%= bot.shortDesc %></p>
+                        
+                        <div class="flex items-center justify-center">
+                            <span class="px-3 py-1 rounded-full text-sm <%= bot.status?.toLowerCase() === 'online' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400' %>">
+                                <%= bot.status || 'Offline' %>
+                            </span>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <% bot.tags.slice(0, 3).forEach(tag => { %>
+                                <span class="px-2 py-1 bg-blue-600/20 text-blue-400 rounded-full text-xs"><%= tag %></span>
+                            <% }) %>
+                        </div>
+
+                        <div class="text-center">
+                            <span class="inline-flex items-center px-3 py-1 bg-indigo-600/20 text-indigo-400 rounded-full text-sm">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                                </svg>
+                                <%= bot.votes %> votes
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            <% }) %>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center items-center space-x-2 mt-12">
+            <% if (currentPage > 1) { %>
+                <a href="/all?page=<%= currentPage - 1 %>" 
+                   class="px-4 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300">
+                    Previous
+                </a>
+            <% } %>
+
+            <% for (let i = 1; i <= totalPages; i++) { %>
+                <% if (i === currentPage) { %>
+                    <span class="px-4 py-2 rounded-lg bg-blue-600/50 backdrop-blur-sm border border-blue-500/50 text-white"><%= i %></span>
+                <% } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
+                    <a href="/all?page=<%= i %>" 
+                       class="px-4 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300">
+                        <%= i %>
+                    </a>
+                <% } else if (i === currentPage - 2 || i === currentPage + 2) { %>
+                    <span class="px-2 text-gray-500">...</span>
+                <% } %>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+                <a href="/all?page=<%= currentPage + 1 %>" 
+                   class="px-4 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300">
+                    Next
+                </a>
+            <% } %>
+        </div>
+    </main>
+</body>
+</html>

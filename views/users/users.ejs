@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.username %> | Bots.gg Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black min-h-screen text-gray-100 antialiased">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="/" class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                    Bots.gg
+                </a>
+                <nav class="flex gap-6">
+                    <a href="/" class="text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="/about" class="text-gray-300 hover:text-white transition-colors">About</a>
+                    <% if (user) { %>
+                        <a href="/logout" class="text-gray-300 hover:text-white transition-colors">Logout</a>
+                    <% } else { %>
+                        <a href="/auth/discord" class="text-gray-300 hover:text-white transition-colors">Login</a>
+                    <% } %>
+                </nav>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Header -->
+    <header class="pt-32 pb-20 px-4 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-600/10 to-purple-600/10"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(51,65,85,0.1)_0,rgba(0,0,0,0)_100%)]"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative">
+            <div class="flex flex-col items-center space-y-4">
+                <img src="<%= user.avatarURL %>" 
+                     alt="<%= user.username %>'s Avatar"
+                     class="w-32 h-32 rounded-full ring-4 ring-blue-500/30 shadow-lg">
+                <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                    <%= user.username %>
+                </h1>
+                <p class="text-gray-400">ID: <%= user.id %></p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Owned Bots Section -->
+    <section class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                Owned Bots
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% bots.forEach(bot => { %>
+                    <div class="group bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 hover:bg-gray-800 transition-all duration-200 border border-gray-700/50">
+                        <a href="/bots/<%= bot.botID %>" class="block">
+                            <div class="flex items-start space-x-4">
+                                <img src="<%= bot.avatarURL || 'https://cdn.discordapp.com/embed/avatars/0.png' %>" 
+                                     class="w-16 h-16 rounded-full ring-2 ring-blue-500/20 group-hover:ring-blue-500/40 transition-all"
+                                     alt="<%= bot.username %>">
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-semibold text-white truncate">
+                                        <%= bot.username %>
+                                    </h3>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= 
+                                        bot.status === 'ONLINE' 
+                                        ? 'bg-green-400/10 text-green-400' 
+                                        : 'bg-red-400/10 text-red-400'
+                                    %>">
+                                        <%= bot.status || 'Offline' %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p class="mt-4 text-gray-400 text-sm line-clamp-2">
+                                <%= bot.shortDesc %>
+                            </p>
+
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <% bot.tags.forEach(tag => { %>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-400/10 text-blue-400">
+                                        <%= tag %>
+                                    </span>
+                                <% }) %>
+                            </div>
+
+                            <div class="mt-4 flex items-center text-sm text-gray-400">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+                                </svg>
+                                <%= bot.votes %> votes
+                            </div>
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
